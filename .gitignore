@@ -1,0 +1,8 @@
+*.xml
+*.json
+*.cpython-36.pyc
+*.json.num
+*.gzip
+*.pkl
+*.bind
+*.iml
