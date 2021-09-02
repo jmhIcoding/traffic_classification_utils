@@ -1,5 +1,8 @@
 *
+!README
 !*/
+!*.txt
+!*.name
 !*.py
 !*.md
 !*.pdf
