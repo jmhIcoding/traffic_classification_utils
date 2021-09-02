@@ -1,3 +1,4 @@
+
 __author__ = 'dk'
 import  os
 #设置Tensorflow的日志等级
@@ -62,4 +63,5 @@ if __name__ == '__main__':
     X_train, y_train, X_valid, y_valid, X_test, y_test =  LoadDataNoDefCW100()
     #test_df(X_train=X_train,y_train=y_train,X_valid=X_valid,y_valid=y_valid,X_test=X_test,y_test=y_test)
     #test_cnn(X_train=X_train,y_train=y_train,X_valid=X_valid,y_valid=y_valid,X_test=X_test,y_test=y_test)
+
     test_sdae(X_train,y_train,X_valid,y_valid,X_test,y_test)

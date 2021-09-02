@@ -24,4 +24,5 @@ def set_visible_gpu():
     else:
         os.environ['CUDA_VISBALE_DEIVCES'] ='0'
 if __name__ == '__main__':
+
     print(get_free_gpu_id())

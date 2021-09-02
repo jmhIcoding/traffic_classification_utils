@@ -1,4 +1,4 @@
-__author__ = 'dk'
+
 import random
 import os
 import pickle
@@ -59,4 +59,3 @@ class abs_model:
         for _root, _dir, _files in os.walk(self.full_rdata):
             classes = _files
         return len(classes)
-

@@ -33,3 +33,4 @@ if __name__ == '__main__':
     predict_y = prediction(flatten(X_train))
     accuracy = accuracy_score(y_train,predict_y)
     print('test accuracy:{0}'.format(accuracy))
+

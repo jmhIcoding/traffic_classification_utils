@@ -31,4 +31,5 @@ def main(raw_feature_dictory,modelpath,global_feature_dict_filename="./global_fe
 
     accuracy = accuracy_score(y_test,label_predict)
     accuracy_per_class(y_real=y_test,y_pred=label_predict)
+
     print(accuracy)

@@ -180,4 +180,3 @@ class builder:
         return X_train,y_train,X_test,y_test,X_valid,y_valid
 if __name__ == '__main__':
     bd = builder(raw_feature_dictory='./raw_feature/',global_feature_dict_filename="./raw_feature/global_feature_dict.vocb")
-    bd.vectorize()

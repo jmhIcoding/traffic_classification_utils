@@ -43,8 +43,3 @@ print(accuracy)
 
 #save model
 gbm.save_model(saved_model)
-
-
-
-
-

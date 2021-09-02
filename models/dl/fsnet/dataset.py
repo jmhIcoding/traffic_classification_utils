@@ -71,4 +71,5 @@ def accuracy(model, val_num_batches, sess, handle, str_handle, name):
     metric[name + '/loss/rec'] = np.mean(r_losses)
     metric[name + '/accuracy'] = pred_right / pred_all
     summ = _get_summary(metric)
+
     return loss, summ, metric

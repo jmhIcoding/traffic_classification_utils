@@ -309,4 +309,5 @@ if __name__ == '__main__':
     #-483.0 110.0
     #输出百分位数
     for i in range(0,101,1):
+
        print("percentile {0}:{1}".format(i,np.percentile(lens,i)))

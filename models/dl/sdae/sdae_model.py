@@ -136,4 +136,5 @@ def pre_train(model,x_train, x_test, learn_params=learning_params_template):
             prev_x_train, prev_x_test, weights = make_layer(l, prev_x_train, prev_x_test)
         model.layers[encoded_layers[i]].set_weights(weights)
     #print(sae.get_weights())
+
     return  model

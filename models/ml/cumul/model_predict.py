@@ -22,3 +22,4 @@ if __name__ == '__main__':
     accuracy = accuracy_score(test_y,predict_y)
     print('test accuracy:{0}'.format(accuracy))
 
+

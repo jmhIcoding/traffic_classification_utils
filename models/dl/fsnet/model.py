@@ -110,7 +110,9 @@ class FSNet(object):
         self.global_step = tf.get_variable('global_step', shape=[], dtype=tf.int32,
                                            initializer=tf.constant_initializer(0), trainable=False)
         self.ids, self.label, self.flow = batch_data.get_next()
+
         print(self.flow)
+
         self._gru = CudaBiGRU if config.is_cudnn else MultiBiGRU
         # get best batch shape
         with tf.variable_scope('reshape'):

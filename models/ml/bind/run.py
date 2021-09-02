@@ -39,4 +39,5 @@ logit = gbm.predict(data=X_test)
 label_predict = list(map(lambda x : np.argmax(x),logit))
 
 accuracy = accuracy_score(y_test,label_predict)
+
 print(accuracy)
