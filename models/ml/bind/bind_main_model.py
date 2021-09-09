@@ -171,6 +171,6 @@ class model(abs_model):
         print(report)
 
 if __name__ == '__main__':
-    bind = model('website113', randseed= 128, splitrate= 0.1,topK=500)
+    bind = model('cloud', randseed= 128, splitrate= 0.1,topK=500)
     bind.train()
     bind.test()

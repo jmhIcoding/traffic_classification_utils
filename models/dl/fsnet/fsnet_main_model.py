@@ -160,7 +160,7 @@ class model(abs_model):
             print(flow)
             raise exp
 if __name__ == '__main__':
-    fsnet_model = model('tunnel_ciscovpn', randseed= 128, splitrate=0.1)
+    fsnet_model = model('tunnel_pptp', randseed= 128, splitrate=0.1)
     fsnet_model.train()
     #fsnet_model.test()
 

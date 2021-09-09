@@ -246,4 +246,5 @@ def parser_raw_data(self,path, max_len):
         else:
             X_train.append(X[i])
             y_train.append(y[i])
+    return X_train,y_train, X_valid, y_valid, X_test, y_test
 

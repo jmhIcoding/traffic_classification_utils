@@ -162,7 +162,7 @@ class model(abs_model):
         print(report)
 
 if __name__ == '__main__':
-    appscanner = model('website113', 128, 0.1)
+    appscanner = model('cloud', 128, 0.1)
     #appscanner.parser_raw_data()
     appscanner.train()
     appscanner.test()

@@ -68,7 +68,7 @@ class model(abs_model):
         print('Deep Fingerprinting Test on {0} accuracy :{1}'.format(self.dataset,score))
 
 if __name__ == '__main__':
-    df_model = model('tunnel_wireguard', randseed= 128, splitrate=0.1)
+    df_model = model('cloud', randseed= 128, splitrate=0.1)
 
     df_model.train()
-    #df_model.test()
+    df_model.test()
