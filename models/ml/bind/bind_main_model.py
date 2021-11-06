@@ -157,7 +157,7 @@ class model(abs_model):
         label_predict = list(map(lambda x : np.argmax(x),logit))
         accuracy = accuracy_score(y_test,label_predict)
         print('[Bind Test on {0}, accuracy: {1}]'.format(self.dataset,accuracy))
-        report = classification_report(y_true=y_test, y_pred = label_predict)
+        report = classification_report(y_true=y_test, y_pred = label_predict, digits=5)
         print(report)
 
     def test(self):
@@ -173,6 +173,6 @@ class model(abs_model):
         print(report)
 
 if __name__ == '__main__':
-    bind = model('datacon', randseed= 128, splitrate= 0.1,topK=500)
+    bind = model('social_weibo_ip', randseed= 128, splitrate= 0.1,topK=500)
     bind.train()
     #bind.test()

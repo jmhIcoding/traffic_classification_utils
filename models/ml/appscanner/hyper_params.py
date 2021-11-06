@@ -1,6 +1,6 @@
 __author__ = 'dk'
 hyper_params = {
-         'boosting_type': 'rf',
+         'boosting_type': 'gbdt',
          'objective': 'multiclass',
          'num_leaves': 512,
          'learning_rate': 0.05,

@@ -47,7 +47,7 @@ class model(abs_model):
                 file = _files[file]
                 label = labels.index(file)
                 file = _root + '/' + file
-
+                #print(file)
                 with open(file) as fp:
                     rdata = json.load(fp)
 
@@ -162,7 +162,7 @@ class model(abs_model):
         print(report)
 
 if __name__ == '__main__':
-    appscanner = model('cloud', 128, 0.1)
+    appscanner = model('datacon', 128, 0.1)
     #appscanner.parser_raw_data()
     appscanner.train()
     appscanner.test()
