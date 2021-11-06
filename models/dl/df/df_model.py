@@ -82,13 +82,13 @@ def build_model(input_shape=(learning_params_template['in_dim'],1), classes=nb_c
 
     model.add(Flatten(name='flatten'))
     model.add(Dense(512, kernel_initializer=glorot_uniform(seed=0), name='fc1'))
-    model.add(BatchNormalization())
+    #model.add(BatchNormalization())
     model.add(Activation('relu', name='fc1_act'))
 
     model.add(Dropout(0.7, name='fc1_dropout'))
 
     model.add(Dense(512, kernel_initializer=glorot_uniform(seed=0), name='fc2'))
-    model.add(BatchNormalization())
+    #model.add(BatchNormalization())
     model.add(Activation('relu', name='fc2_act'))
 
     model.add(Dropout(0.5, name='fc2_dropout'))

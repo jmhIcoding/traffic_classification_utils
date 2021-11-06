@@ -6,6 +6,7 @@ import os
 from config import raw_dataset_base
 from keras.utils import np_utils
 import numpy as np
+os.environ['CUDA_VISBALE_DEIVCES'] ='cuda:2'
 class model(abs_model):
     def __init__(self, dataset, randseed, splitrate):
         super(model,self).__init__('df',randseed= randseed)
@@ -22,6 +23,8 @@ class model(abs_model):
 
         if self.data_exists() == False:
             self.parser_raw_data()
+
+        self.df_model = None
     def parser_raw_data(self):
         full_rdata = self.full_rdata
         if os.path.exists(full_rdata) == False:
@@ -67,8 +70,49 @@ class model(abs_model):
         score = df_model.evaluate(X_test=X_test,y_test=y_test)
         print('Deep Fingerprinting Test on {0} accuracy :{1}'.format(self.dataset,score))
 
-if __name__ == '__main__':
-    df_model = model('cloud', randseed= 128, splitrate=0.1)
+    def predict(self,pkt_size):
+        def pad_sequence(x, max_len, pad_value=0):
+            r =  x + [pad_value] * (max_len - len(x))
+            return r[:max_len]
 
+        if self.df_model == None:
+            self.df_model = DF_model(num_class= self.num_classes())
+            self.df_model.load_model(self.model)
+
+        x = [pad_sequence(_pkt_size, max_len= df_model_config.learning_params_template['in_dim']) for _pkt_size in pkt_size]
+        x = np.array(x)[:, :,np.newaxis]
+        y_logit = self.df_model.predict(x, actual_lable=True)
+        return y_logit.tolist()
+    def get_feature(self):
+        X_train,y_train, X_valid, y_valid, X_test, y_test = self.load_data()
+        #y_test = np_utils.to_categorical(y_test, num_classes= self.num_classes())
+        X_test  = X_test[:5000]
+        X_test  = X_test[:, :,np.newaxis]
+
+        df_model = DF_model(num_class= self.num_classes())
+        df_model.load_model(self.model)
+        logit, feature = df_model.predict(X_test=X_test,actual_lable=False, return_feature=True)
+        print(feature.shape, logit.shape)
+        logit = logit.tolist()
+        feature = feature.tolist()
+        #feature = logit
+        y_true = y_test[:5000].tolist()
+        feature_set = {}
+        feature_vector = []
+        for i in range(len(y_true)):
+           if y_true[i] not in feature_set:
+              feature_set[y_true[i]] = []
+           feature_set[y_true[i]].append([feature[i]])
+        import pickle
+        with open('feature_set_D1_53_DF.pkl','wb') as fp:
+            pickle.dump(feature_set, fp)
+        print(y_true[-1],logit[-1])
+        print(feature[-1])		
+if __name__ == '__main__':
+  for test_rate in [0.1]:
+    print(test_rate)
+    df_model = model('social_weibo_ip', randseed= 128, splitrate=test_rate)
+    #df_model.parser_raw_data()
     df_model.train()
     df_model.test()
+    #df_model.get_feature()

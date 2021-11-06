@@ -12,6 +12,7 @@ try:
 except:
     pass
 import  numpy as np
+from keras import backend as K
 from models.dl.select_gpu import set_visible_gpu
 from models.dl.cnn import cnn_model
 from models.dl.df import df_model
@@ -110,8 +111,24 @@ class attack_base:
                 y_pred=self.predict(X_test,actual_lable=True)
                 accuracy_per_class(y_real=np.argmax(y_test,1),y_pred=y_pred)
                 return score_test[1]
+    def get_feature_map(self,X,layer_name='block1_conv1'):
+        ''' 获取特定中间层的特征图
 
-    def predict(self,X_test,actual_lable=False,verbose=2):
+        :param X:           输入数据
+        :param layer_name:  层的名字,str
+        :return:
+        '''
+        with self.session.as_default():
+            with self.graph.as_default():
+                layer =   self.model.get_layer(layer_name)
+                if layer != None:
+                    value = layer.output
+                    get_value= K.function(inputs=self.model.inputs,outputs=[value])
+                    output = get_value([X])[0]
+                    return  output
+                else:
+                    raise ValueError('Model{0} could not find layer named {1}.'.format(self.model_name,layer_name))
+    def predict(self,X_test,actual_lable=False, return_feature=False, verbose=2):
         ''' 预测标签
         :param X_test:  待测数据 ,shape: [样本个数,特征维度1,特征维度2...]
         :param verbose:
@@ -120,15 +137,24 @@ class attack_base:
         if self.model_name() == "sdae_model" :
             if len(X_test.shape) > 2:
                 X_test = X_train.reshape(X_test.shape[0], X_test.shape[1])
-
-        prob = self.model.predict(X_test,verbose=2)
+        with self.session.as_default():
+            with self.graph.as_default():
+                  prob = self.model.predict(X_test,verbose=2)
+        if return_feature == True:
+           features = self.get_feature_map(X_test, 'fc1')
         if actual_lable== False:
-            #返回概率分布
-            return prob
+        	#返回概率分布
+            if return_feature == False:
+               return prob
+            else:
+               return prob, features
         else:
-            #返回真实的标签,每个标签是个一维的数字
+        	#返回真实的标签,每个标签是个一维的数字
             labels =  np.argmax(prob,axis=1)
-            return  labels
+            if return_feature == False:
+               return  labels
+            else:
+               return  labels, features
 
 class CNN_model(attack_base):
     def __init__(self):

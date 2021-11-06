@@ -96,9 +96,10 @@ def _predict_test(sess, model, num, class_num):
     pred = [[] for _ in range(class_num)]
     real = [[] for _ in range(class_num)]
     sample_set = set()
+    feature_set = {}
     for _ in tqdm(range(num), ascii=True, desc='Predict'):
-        ids, preds = sess.run([model.ids, model.pred])
-        for idx, predx in zip(ids.tolist(), preds.tolist()):
+        ids, preds, features = sess.run([model.ids, model.pred, model.logit])
+        for idx, predx, feature in zip(ids.tolist(), preds.tolist(), features.tolist()):
             idx = idx.decode('utf-8')
             if idx in sample_set:
                 continue
@@ -106,6 +107,12 @@ def _predict_test(sess, model, num, class_num):
             real_app = int(idx.strip().split('-')[0])
             real[real_app].append(real_app)
             pred[real_app].append(predx)
+            if real_app not in feature_set:
+               feature_set[real_app] =[]
+            feature_set[real_app].append(feature)
+    import pickle
+    with open('feature_set_FSNET.pkl','wb') as fp:
+        pickle.dump(feature_set, fp)    
     return real, pred
 
 

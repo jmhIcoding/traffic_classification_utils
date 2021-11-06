@@ -54,7 +54,10 @@ class abs_model:
         y_valid = data['y_valid']
         X_test = data['X_test']
         y_test = data['y_test']
-        return np.array(X_train), np.array(y_train), np.array(X_valid), np.array(y_valid), np.array(X_test), np.array(y_test)
+        import random
+        indexs = [x for x in range(len(y_test))]
+        random.shuffle(indexs)
+        return np.array(X_train), np.array(y_train), np.array(X_valid), np.array(y_valid), np.array(X_test)[indexs], np.array(y_test)[indexs]
     def num_classes(self):
         for _root, _dir, _files in os.walk(self.full_rdata):
             classes = _files

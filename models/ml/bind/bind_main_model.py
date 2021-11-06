@@ -157,6 +157,8 @@ class model(abs_model):
         label_predict = list(map(lambda x : np.argmax(x),logit))
         accuracy = accuracy_score(y_test,label_predict)
         print('[Bind Test on {0}, accuracy: {1}]'.format(self.dataset,accuracy))
+        report = classification_report(y_true=y_test, y_pred = label_predict)
+        print(report)
 
     def test(self):
         dator = build_vector_dataset.builder(raw_feature_dictory= self.data)
@@ -171,6 +173,6 @@ class model(abs_model):
         print(report)
 
 if __name__ == '__main__':
-    bind = model('cloud', randseed= 128, splitrate= 0.1,topK=500)
+    bind = model('datacon', randseed= 128, splitrate= 0.1,topK=500)
     bind.train()
-    bind.test()
+    #bind.test()

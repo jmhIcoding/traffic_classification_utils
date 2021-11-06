@@ -53,11 +53,11 @@ class model(abs_model):
         flags.DEFINE_integer('class_num', self.num_classes(), 'the class number')
         flags.DEFINE_integer('length_block', 1, 'the length of a block')
         flags.DEFINE_integer('min_length', 2, 'the flow under this parameter will be filtered')
-        flags.DEFINE_integer('max_packet_length', 1000, 'the largest packet length')
-        flags.DEFINE_float('split_ratio', 0.8, 'ratio of train set of target app')
+        flags.DEFINE_integer('max_packet_length', 1500, 'the largest packet length')
+        flags.DEFINE_float('split_ratio', 1-self.splitrate, 'ratio of train set of target app')
         flags.DEFINE_float('keep_ratio', 1, 'ratio of keeping the example (for small dataset test)')
-        flags.DEFINE_integer('max_flow_length_train', 200, 'the max flow length, if larger, drop')
-        flags.DEFINE_integer('max_flow_length_test', 1000, 'the max flow length, if larger, drop')
+        flags.DEFINE_integer('max_flow_length_train', 5000, 'the max flow length, if larger, drop')
+        flags.DEFINE_integer('max_flow_length_test', 5000, 'the max flow length, if larger, drop')
         flags.DEFINE_string('test_model_dir', log_dir, 'the model dir for test result')
         flags.DEFINE_string('pred_dir', pred_dir, 'the dir to save predict result')
 
@@ -138,6 +138,9 @@ class model(abs_model):
         elif config.mode == 'logit':
             config.keep_prob = 1
             return train.get_logit_online(config,flow)
+        elif config.mode == 'get_logit':
+            config.keep_prob = 1
+            return train.get_logit(config)            
         else:
             print('unknown mode, only support train now')
             raise Exception
@@ -149,7 +152,7 @@ class model(abs_model):
         self.fs_main(mode='test')
         print(self.dataset)
     def logit(self):
-        self.fs_main(mode='logit')
+        self.fs_main(mode='get_logit')
 
     def logit_online(self, flow):
         try:
@@ -160,7 +163,12 @@ class model(abs_model):
             print(flow)
             raise exp
 if __name__ == '__main__':
-    fsnet_model = model('tunnel_pptp', randseed= 128, splitrate=0.1)
+ for test_rate in [0.1]:
+    print(test_rate)
+
+    fsnet_model = model('social_weibo_ip', randseed= 128, splitrate=test_rate)
+    #fsnet_model.parser_raw_data()
     fsnet_model.train()
-    #fsnet_model.test()
+    fsnet_model.test()
+    del fsnet_model
 
