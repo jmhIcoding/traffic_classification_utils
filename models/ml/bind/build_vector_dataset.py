@@ -4,10 +4,15 @@ import pickle
 import os
 import numpy as np
 import random
+
 class builder:
     def __init__(self,raw_feature_dictory,global_feature_dict_filename=None):
+        self.rand = random.Random(x=128)
+
         self.raw_feature_dictory= raw_feature_dictory
-        if global_feature_dict_filename== None or os.path.exists(global_feature_dict_filename)==False:
+        if global_feature_dict_filename == None:
+            global_feature_dict_filename = raw_feature_dictory + '/global_feature_dict.vocb'
+        if os.path.exists(global_feature_dict_filename)==False:
             #构建一个字典
             self.global_feature_dict ={
                         'Dn-Up-size':{},
@@ -166,10 +171,14 @@ class builder:
         assert  len(self.X) == len(self.y)
         self.X = np.array(self.X)
         self.y = np.array(self.y)
+        print('X shape', self.X.shape)
+        print('y shape', self.y.shape)
+        p =[x for x in range(self.y.shape[0])]
+        self.rand.shuffle(p)
 
-        p = np.random.permutation(range(self.y.shape[0]))
         self.X = self.X[p]
         self.y =self.y[p]
+
         test_split_index= int(self.y.shape[0] * test_split_ratio)
         X_test = self.X[:test_split_index]
         y_test = self.y[:test_split_index]
@@ -180,3 +189,4 @@ class builder:
         return X_train,y_train,X_test,y_test,X_valid,y_valid
 if __name__ == '__main__':
     bd = builder(raw_feature_dictory='./raw_feature/',global_feature_dict_filename="./raw_feature/global_feature_dict.vocb")
+    bd.vectorize()

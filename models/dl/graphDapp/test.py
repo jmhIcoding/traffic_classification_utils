@@ -18,11 +18,11 @@ if use_gpu :
 else:
     device= "cpu"
 
-def main(dataset_name, modelpath,max_epoch=200):
+def main(dataset_name, modelpath,max_epoch=0):
     data_loader = Dataset_fgnet(raw_dir=r'',dumpfile=dataset_name,renew=False)
     print(data_loader)
     model = DApp_classifier(nb_classes=len(data_loader.labelname),
-                            gin_layer_num=config['gin_hidden_units'],
+                            gin_layer_num=config['gin_layer_num'],
                             gin_hidden_units=config['gin_hidden_units'],
                             iteration_nums=config['iteration_nums'],
                             device= device,use_gpu= use_gpu)
