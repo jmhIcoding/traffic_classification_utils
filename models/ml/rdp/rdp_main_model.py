@@ -133,15 +133,15 @@ class model(abs_model):
 
         for i in range(len(_X_train)):
             X_train += _X_train[i]
-            y_train += _y_train[i] * len(_X_train[i])
+            y_train += [_y_train[i]] * len(_X_train[i])
 
         for i in range(len(_X_valid)):
             X_valid += _X_valid[i]
-            y_valid += _y_valid[i] * len(_X_valid[i])
+            y_valid += [_y_valid[i]] * len(_X_valid[i])
 
         for i in range(len(_X_test)):
             X_test += _X_test[i]
-            y_test += _y_test[i] * len(_X_test[i])
+            y_test += [_y_test[i]] * len(_X_test[i])
 
         #打乱数据
         _indexs = [i for i in range(len(X_train))]
@@ -149,7 +149,7 @@ class model(abs_model):
         X_train = np.array(X_train)[_indexs]
         y_train = np.array(y_train)[_indexs]
 
-        _indexs = [i for i in range(len(X_test))]
+        _indexs = [i for i in range(len(X_valid))]
         random.shuffle(_indexs)
         X_valid = np.array(X_valid)[_indexs]
         y_valid = np.array(y_valid)[_indexs]
@@ -183,6 +183,8 @@ class model(abs_model):
         accuracy = accuracy_score(y_test,label_predict)
 
         print('[RDP Test on {0} accuracy:{1} (single burst)]'.format(self.dataset,accuracy))
+        report = classification_report(y_true=y_test,y_pred=label_predict,digits=5)
+        print(report)
 
     def test(self):
         X_train, y_train, X_valid, y_valid, _X_test, _y_test = self.load_data()
@@ -194,28 +196,22 @@ class model(abs_model):
 
         X_test = []
         y_test = []
+        y_test_single_burst =[]
         sample_index_map= {}
         burst_number = 0
         for i in range(len(_X_test)):
+            if len(_X_test[i]) == 0:
+                continue
             X_test += _X_test[i]
-            y_test += _y_test[i] * len(_X_test[i])
+            y_test += [_y_test[i]]
+            y_test_single_burst += [_y_test[i]] * len(_X_test[i])
             burst_number +=  len(_X_test[i])
             sample_index_map[i] = range(burst_number - len(_X_test[i]), burst_number)
-
         X_test = np.array(X_test)
-        y_test = np.array(y_test)
 
         logit = gbm.predict(data=X_test)
-        PPT = 0
-        _logit = []
-        for i in range(y_test.shape[0]):
-            if np.max(logit[i])>= PPT:
-                _logit.append(logit[i])
-        _logit = np.array(_logit)
-
-        label_predict = map(lambda x : np.argmax(x), _logit)
-
-
+        label_predict = np.array(list(map(lambda x : np.argmax(x), logit)))
+        print("[RDP] Test on {0}, accuracy is {1}. (single burst) ".format(self.dataset,accuracy_score(y_test_single_burst, label_predict)))
         ##投票
         def vote_majority(votes):
             rst = {}
@@ -233,13 +229,13 @@ class model(abs_model):
             final_label = vote_majority(votes)
             _label_predict.append(final_label)
 
-        accuracy = accuracy_score(_y_test,_label_predict)
-        report = classification_report(y_true=_y_test,y_pred=_label_predict,digits=5)
+        accuracy = accuracy_score(y_test,_label_predict)
+        report = classification_report(y_true=y_test,y_pred=_label_predict,digits=5)
 
         print("[RDP] Test on {0}, accuracy is {1}. ".format(self.dataset,accuracy))
         print(report)
 if __name__ == '__main__':
     rdp = model('fgnet53', 128, 0.1)
     #rdp.parser_raw_data()
-    rdp.train(num_boost_round=50)
+    #rdp.train(num_boost_round=50)
     rdp.test()
