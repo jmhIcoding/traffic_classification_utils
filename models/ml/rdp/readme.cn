@@ -1,0 +1,16 @@
+方法来源：IPCCC 2019
+@inproceedings{jiang2019know,
+  title={I Know What You Are Doing With Remote Desktop},
+  author={Jiang, Minghao and Gou, Gaopeng and Shi, Junzheng and Xiong, Gang},
+  booktitle={2019 IEEE 38th International Performance Computing and Communications Conference (IPCCC)},
+  pages={1--7},
+  year={2019},
+  organization={IEEE}
+}
+
+方法逻辑：
+    1. 按照时间idle切分burst
+    2. 每个burst提取66维统计特征，前51维是包长的统计特征，后15维是包间隔的统计特征
+    3. 训练的时候，以burst为单元进行分类
+    4. 测试的时候，给定一条流，对里面的所有burst，按照投票选出它的标签
+
