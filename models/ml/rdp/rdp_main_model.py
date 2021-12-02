@@ -237,5 +237,5 @@ class model(abs_model):
 if __name__ == '__main__':
     rdp = model('fgnet53', 128, 0.1)
     #rdp.parser_raw_data()
-    #rdp.train(num_boost_round=50)
+    rdp.train(num_boost_round=100)
     rdp.test()

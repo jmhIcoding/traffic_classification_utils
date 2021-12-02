@@ -33,19 +33,19 @@ class model(abs_model):
         os.makedirs(self.data, exist_ok=True)
         ##从原始数据集构建graphDApp所需数据
         dator = Dataset(raw_dir=full_rdata,
-                        dumpfile='{0}.gzip'.format(self.dataset),
+                        dumpfile=self.data + '{0}.gzip'.format(self.dataset),
                         split_rate=self.splitrate,
                         renew= True)
         dator.save_dumpfile()
 
     def train(self):
-        train_main(dataset_name=self.dataset, modelpath= self.model, max_epoch=60)
+        train_main(dataset_name=self.data + '{0}.gzip'.format(self.dataset), modelpath= self.model)
 
     def test(self):
-        self.fs_main(mode='test')
-        print(self.dataset)
+        test_main(dataset_name=self.data + '{0}.gzip'.format(self.dataset), modelpath= self.model)
 
 if __name__ == '__main__':
-    fsnet_model = model('fgnet53', randseed= 128, splitrate=0.1)
-    fsnet_model.train()
-    fsnet_model.test()
+    graphdapp_model = model('blockchain_ambiguous_enhance2', randseed= 128, splitrate=0.1)
+    #graphdapp_model.parser_raw_data()
+    graphdapp_model.train()
+    graphdapp_model.test()

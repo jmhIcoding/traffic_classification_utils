@@ -173,6 +173,6 @@ class model(abs_model):
         print(report)
 
 if __name__ == '__main__':
-    bind = model('tifs2015', randseed= 128, splitrate= 0.1,topK=500)
+    bind = model('blockchain_clear', randseed= 128, splitrate= 0.1,topK=500)
     bind.train()
     bind.test()

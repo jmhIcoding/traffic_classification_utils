@@ -1,11 +1,11 @@
 __author__ = 'dk'
 config = {
     'device_id':'cuda:2',
-    'max_epoch':10,
-    'gin_layer_num':1,
-    'gin_hidden_units':128,
+    'max_epoch':200,
+    'gin_layer_num':3,
+    'gin_hidden_units':64,
     'iteration_nums':3,
-    'learning_rate':5e-5,
+    'learning_rate':5e-4,
     'batch_size':128,
 
 }

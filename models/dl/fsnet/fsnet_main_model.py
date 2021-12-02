@@ -52,12 +52,12 @@ class model(abs_model):
         flags.DEFINE_string('data_dir', data_dir, 'where to read data')
         flags.DEFINE_integer('class_num', self.num_classes(), 'the class number')
         flags.DEFINE_integer('length_block', 1, 'the length of a block')
-        flags.DEFINE_integer('min_length', 2, 'the flow under this parameter will be filtered')
+        flags.DEFINE_integer('min_length',10, 'the flow under this parameter will be filtered')
         flags.DEFINE_integer('max_packet_length', 1500, 'the largest packet length')
         flags.DEFINE_float('split_ratio', 1-self.splitrate, 'ratio of train set of target app')
         flags.DEFINE_float('keep_ratio', 1, 'ratio of keeping the example (for small dataset test)')
-        flags.DEFINE_integer('max_flow_length_train', 5000, 'the max flow length, if larger, drop')
-        flags.DEFINE_integer('max_flow_length_test', 5000, 'the max flow length, if larger, drop')
+        flags.DEFINE_integer('max_flow_length_train', self.max_len, 'the max flow length, if larger, drop')
+        flags.DEFINE_integer('max_flow_length_test', self.max_len, 'the max flow length, if larger, drop')
         flags.DEFINE_string('test_model_dir', log_dir, 'the model dir for test result')
         flags.DEFINE_string('pred_dir', pred_dir, 'the dir to save predict result')
 
@@ -166,7 +166,7 @@ if __name__ == '__main__':
  for test_rate in [0.1]:
     print(test_rate)
 
-    fsnet_model = model('social_weibo_ip', randseed= 128, splitrate=test_rate)
+    fsnet_model = model('D1_Twitter', randseed= 128, splitrate=test_rate, max_len=6000)
     #fsnet_model.parser_raw_data()
     fsnet_model.train()
     fsnet_model.test()

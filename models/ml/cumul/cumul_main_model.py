@@ -176,8 +176,8 @@ class model(abs_model):
         print(report)
         print({'ppt':PPT, 'drop_rate': 1-_y_test.shape[0]/y_test.shape[0]})
 if __name__ == '__main__':
-    cumul = model('social_weibo_ip', 128, 0.1)
-    #cumul = model('fgnet53', 128, 0.1)
+    #cumul = model('D1_Twitter', 128, 0.1)
+    cumul = model('awf200', 128, 0.1)
     #cumul.parser_raw_data()
-    #cumul.train(num_boost_round=50)
+    cumul.train(num_boost_round=50)
     cumul.test()

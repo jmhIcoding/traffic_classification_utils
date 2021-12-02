@@ -147,22 +147,32 @@ class model(abs_model):
 
     def test(self):
         X_train, y_train, X_valid, y_valid, X_test, y_test = self.load_data()
+        print(y_test.shape[0] + y_valid.shape[0] + y_train.shape[0])
         #load model
         try:
             gbm = lgb.Booster(model_file= self.model)
         except BaseException as exp:
             raise exp
         logit = gbm.predict(data=X_test)
-        label_predict = list(map(lambda x : np.argmax(x),logit))
+        PPT = 0.
+        _logit = []
+        _y_test = []
+        for i in range(y_test.shape[0]):
+            if np.max(logit[i])>= PPT:
+                _logit.append(logit[i])
+                _y_test.append(y_test[i])
+        _logit = np.array(_logit)
+        _y_test = np.array(_y_test)
+        label_predict = list(map(lambda x : np.argmax(x),_logit))
 
-        accuracy = accuracy_score(y_test,label_predict)
-        report = classification_report(y_true=y_test,y_pred=label_predict)
+        accuracy = accuracy_score(_y_test,label_predict)
+        report = classification_report(y_true=_y_test,y_pred=label_predict,digits=5)
 
         print("[Appscanner] Test on {0}, accuracy is {1}. ".format(self.dataset,accuracy))
         print(report)
-
+        print({'ppt':PPT, 'drop_rate': 1-_y_test.shape[0]/y_test.shape[0]})
 if __name__ == '__main__':
-    appscanner = model('datacon', 128, 0.1)
+    appscanner = model('blockchain_ambiguous_enhance2', 128, 0.1)
     #appscanner.parser_raw_data()
-    appscanner.train()
+    #appscanner.train()
     appscanner.test()

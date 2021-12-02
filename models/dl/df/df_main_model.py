@@ -111,7 +111,7 @@ class model(abs_model):
 if __name__ == '__main__':
   for test_rate in [0.1]:
     print(test_rate)
-    df_model = model('social_weibo_ip', randseed= 128, splitrate=test_rate)
+    df_model = model('D1_Twitter', randseed= 128, splitrate=test_rate)
     #df_model.parser_raw_data()
     df_model.train()
     df_model.test()

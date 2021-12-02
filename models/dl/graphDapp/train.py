@@ -26,10 +26,11 @@ def main(dataset_name, modelpath, max_epoch=config['max_epoch']):
                             gin_layer_num= config['gin_layer_num'],
                             gin_hidden_units=config['gin_hidden_units'],
                             iteration_nums=config['iteration_nums'],
+							iteration_first=True,
                             device= device,use_gpu= use_gpu)
     loss_func = nn.CrossEntropyLoss()
     optimizer = optim.Adam(params=model.parameters(),lr=config['learning_rate'])
-    model = load(model,optimizer=optimizer,checkpoint_path=modelpath)
+    #model = load(model,optimizer=optimizer,checkpoint_path=modelpath)
     if use_gpu:
         model = model.cuda(device)
         loss_func = loss_func.cuda(device)
