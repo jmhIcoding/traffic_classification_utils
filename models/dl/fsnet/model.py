@@ -207,6 +207,7 @@ class FSNet(object):
         feature = self._compress(feature)
         self.feature = feature
         c_loss, pred = self._classify(feature)
+        return c_loss, pred
         loss = c_loss + self.config.rec_loss * rec_loss
         self.c_loss = c_loss
         self.rec_loss = self.config.rec_loss * rec_loss

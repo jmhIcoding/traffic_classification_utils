@@ -55,20 +55,20 @@ def accuracy(model, val_num_batches, sess, handle, str_handle, name):
     pred_all, pred_right, losses, r_losses, c_losses = 0, 0, [], [], []
     metric = {}
     for _ in tqdm(range(val_num_batches), desc='eval', ascii=True):
-        loss, c_loss, r_loss,\
+        loss,\
         pred, label = sess.run(
-            [model.loss, model.c_loss, model.rec_loss,
+            [model.loss,
              model.pred, model.label],
             feed_dict={handle: str_handle})
         losses.append(loss)
-        r_losses.append(r_loss)
-        c_losses.append(c_loss)
+        #r_losses.append(r_loss)
+        #c_losses.append(c_loss)
         pred_all += len(pred)
         pred_right += np.sum(pred == label)
     loss = np.mean(losses)
     metric[name + '/loss/all'] = loss
-    metric[name + '/loss/clf'] = np.mean(c_losses)
-    metric[name + '/loss/rec'] = np.mean(r_losses)
+    #metric[name + '/loss/clf'] = np.mean(c_losses)
+    #metric[name + '/loss/rec'] = np.mean(r_losses)
     metric[name + '/accuracy'] = pred_right / pred_all
     summ = _get_summary(metric)
 

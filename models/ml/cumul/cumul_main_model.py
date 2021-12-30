@@ -77,7 +77,6 @@ class model(abs_model):
             if r < self.splitrate:
                 X_test.append(X[i])
                 y_test.append(y[i])
-            elif r < self.splitrate * (2 - self.splitrate) :
                 X_valid.append(X[i])
                 y_valid.append(y[i])
             else:
@@ -177,7 +176,9 @@ class model(abs_model):
         print({'ppt':PPT, 'drop_rate': 1-_y_test.shape[0]/y_test.shape[0]})
 if __name__ == '__main__':
     #cumul = model('D1_Twitter', 128, 0.1)
-    cumul = model('awf200', 128, 0.1)
-    #cumul.parser_raw_data()
-    cumul.train(num_boost_round=50)
-    cumul.test()
+    for test_rate in [0.995,0.99,0.95,0.5]:
+        cumul = model('app60', 128, test_rate)
+        cumul.parser_raw_data()
+        cumul.train(num_boost_round=50)
+        print(test_rate)
+        cumul.test()

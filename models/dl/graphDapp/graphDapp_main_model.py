@@ -45,7 +45,7 @@ class model(abs_model):
         test_main(dataset_name=self.data + '{0}.gzip'.format(self.dataset), modelpath= self.model)
 
 if __name__ == '__main__':
-    graphdapp_model = model('blockchain_ambiguous_enhance2', randseed= 128, splitrate=0.1)
-    #graphdapp_model.parser_raw_data()
+    graphdapp_model = model('awf200_burst', randseed= 128, splitrate=0.1)
+    graphdapp_model.parser_raw_data()
     graphdapp_model.train()
     graphdapp_model.test()

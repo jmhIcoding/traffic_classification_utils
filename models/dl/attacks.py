@@ -19,6 +19,7 @@ from models.dl.df import df_model
 from models.dl.lstm import lstm_model,lstm_model_config
 from models.dl.sdae import  sdae_model
 from models.dl.accuracy_per_class import accuracy_per_class
+from models.dl.beauty import cnn_model as beauty_model
 import tqdm,json
 from config import min_flow_len
 #自动选择空闲内存最大的显卡
@@ -157,10 +158,10 @@ class attack_base:
                return  labels, features
 
 class CNN_model(attack_base):
-    def __init__(self):
+    def __init__(self, num_class):
         super(CNN_model,self).__init__()
         self.model_path = self.path_prefix + "/cnn/saved_model/cnn_model.h5"
-
+        self.num_class = num_class
     def model_name(self):
         return "cnn_model"
     def build_model(self):
@@ -169,7 +170,22 @@ class CNN_model(attack_base):
         else:
             with self.session.as_default():
                 with self.graph.as_default():
-                    self.model = cnn_model.build_model()
+                    self.model = cnn_model.build_model(nb_classes= self.num_class)
+class Beauty_model(attack_base):
+    def __init__(self, num_class):
+        super(Beauty_model,self).__init__()
+        self.model_path = self.path_prefix + "/cnn/saved_model/beauty_model.h5"
+        self.num_class = num_class
+    def model_name(self):
+        return "beauty_model"
+    def build_model(self):
+        if os.path.exists(self.model_path):
+            self.load_model()
+        else:
+            with self.session.as_default():
+                with self.graph.as_default():
+                    self.model = beauty_model.build_model(nb_classes= self.num_class)
+
 
 class DF_model(attack_base):
     def __init__(self, num_class):
@@ -229,7 +245,19 @@ class SDAE_model(attack_base):
                     self.model = sdae_model.pre_train(self.model,x_train=x_train,x_test=x_test)
 
 
-def parser_raw_data(self,path, max_len):
+def burstification_operator(x):
+    rst = [x[0]]
+    for i in range(1, len(x)):
+        if int(x[i]) == 0:
+            break
+        if np.sign(rst[-1]) == np.sign(x[i]):
+            rst[-1]+= x[i]
+        else:
+            rst.append(x[i])
+
+    return  rst
+
+def parser_raw_data(self,path, max_len, burstification = False):
     def pad_sequence(x, max_len=max_len, pad_value=0):
         r =  x + [pad_value] * (max_len - len(x))
         return r[:max_len]
@@ -252,6 +280,8 @@ def parser_raw_data(self,path, max_len):
                 pkt_size= each['packet_length']
                 if len(pkt_size) < min_flow_len :
                     continue
+                if burstification :
+                    pkt_size = burstification_operator(pkt_size)
                 x = pad_sequence(pkt_size)
                 X.append(x)
                 y.append(label)
@@ -266,7 +296,6 @@ def parser_raw_data(self,path, max_len):
         if r < self.splitrate:
             X_test.append(X[i])
             y_test.append(y[i])
-        elif r < self.splitrate * (2 - self.splitrate) :
             X_valid.append(X[i])
             y_valid.append(y[i])
         else:
@@ -274,3 +303,6 @@ def parser_raw_data(self,path, max_len):
             y_train.append(y[i])
     return X_train,y_train, X_valid, y_valid, X_test, y_test
 
+if __name__ == '__main__':
+    x= [-199,2000,1,1,1,1,-1,-1,-2]
+    print(burstification_operator(x))

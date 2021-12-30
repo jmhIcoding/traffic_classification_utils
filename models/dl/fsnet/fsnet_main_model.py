@@ -63,13 +63,13 @@ class model(abs_model):
 
         flags.DEFINE_integer('batch_size', 128, 'train batch size')
         flags.DEFINE_integer('hidden', 128, 'GRU dimension of hidden state')
-        flags.DEFINE_integer('layer', 2, 'layer number of length RNN')
-        flags.DEFINE_integer('length_dim', 16, 'dimension of length embedding')
+        flags.DEFINE_integer('layer', 4, 'layer number of length RNN')
+        flags.DEFINE_integer('length_dim', 64, 'dimension of length embedding')
         flags.DEFINE_string('length_num', 'auto', 'length_num')
 
         flags.DEFINE_float('keep_prob', 0.8, 'the keep probability for dropout')
         flags.DEFINE_float('learning_rate', 0.001, 'learning rate')
-        flags.DEFINE_integer('iter_num', int(5e4), 'iteration number')
+        flags.DEFINE_integer('iter_num', int(1e4), 'iteration number')
         flags.DEFINE_integer('eval_batch', 77, 'evaluated train batches')
         flags.DEFINE_integer('train_eval_batch', 77, 'evaluated train batches')
         flags.DEFINE_string('decay_step', 'auto', 'the decay step')
@@ -82,7 +82,7 @@ class model(abs_model):
         flags.DEFINE_float("grad_clip", 5.0, "Global Norm gradient clipping rate")
 
         flags.DEFINE_boolean('is_cudnn', True, 'whether take the cudnn gru')
-        flags.DEFINE_float('rec_loss', 0.5, 'the parameter to control the reconstruction of length sequence')
+        flags.DEFINE_float('rec_loss', 0., 'the parameter to control the reconstruction of length sequence')
 
         config = flags.FLAGS
         return config
@@ -163,12 +163,15 @@ class model(abs_model):
             print(flow)
             raise exp
 if __name__ == '__main__':
- for test_rate in [0.1]:
+ for test_rate in [ 0.1]:
     print(test_rate)
-
-    fsnet_model = model('D1_Twitter', randseed= 128, splitrate=test_rate, max_len=6000)
+    dataset='app60'
+    fsnet_model = model(dataset, randseed= 128, splitrate=test_rate, max_len=200)
     #fsnet_model.parser_raw_data()
-    fsnet_model.train()
+    #fsnet_model.train()
     fsnet_model.test()
+    print(test_rate)
+    print(dataset)
     del fsnet_model
+    break
 

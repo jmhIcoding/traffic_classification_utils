@@ -58,6 +58,8 @@ class model(abs_model):
                 direction =sign
                 burst_size.append(0)
                 burst_time.append(0)
+            if 'arrive_time_delta' not in each_trace :
+                each_trace['arrive_time_delta'] = [0.0] * len(each_trace['packet_length'])
             burst_size[-1] += each_trace['packet_length'][i]            #累积包长
             burst_time[-1] += int(each_trace['arrive_time_delta'][i] * 100)/100        #累积通信时长,保留两位小数
         #构建burst级别的特征
@@ -173,6 +175,8 @@ class model(abs_model):
         print(report)
 
 if __name__ == '__main__':
-    bind = model('blockchain_clear', randseed= 128, splitrate= 0.1,topK=500)
-    bind.train()
-    bind.test()
+    for test_rate in [0.1]:
+        bind = model('awf200_burst', randseed= 128, splitrate= test_rate,topK=500)
+        bind.parser_raw_data()
+        bind.train()
+        bind.test()

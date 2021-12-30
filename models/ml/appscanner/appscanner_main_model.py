@@ -76,9 +76,8 @@ class model(abs_model):
             if r < self.splitrate:
                 X_test.append(X[i])
                 y_test.append(y[i])
-            elif r < self.splitrate * (2 - self.splitrate) :
                 X_valid.append(X[i])
-                y_valid.append(y[i])
+                y_valid.append(y[i])				
             else:
                 X_train.append(X[i])
                 y_train.append(y[i])
@@ -131,7 +130,7 @@ class model(abs_model):
         hyper_params['num_class'] = self.num_classes()
         gbm = lgb.train(params=hyper_params,
                         train_set=lgb_train,
-                        valid_sets=lgb_eval,
+                        valid_sets=lgb_train,
                         num_boost_round=50,
                         early_stopping_rounds=5)
         #save model
@@ -172,7 +171,10 @@ class model(abs_model):
         print(report)
         print({'ppt':PPT, 'drop_rate': 1-_y_test.shape[0]/y_test.shape[0]})
 if __name__ == '__main__':
-    appscanner = model('blockchain_ambiguous_enhance2', 128, 0.1)
-    #appscanner.parser_raw_data()
-    #appscanner.train()
-    appscanner.test()
+    for test_rate in [0.1]:
+      appscanner = model('awf200_burst', 128, test_rate)
+      #appscanner.parser_raw_data()
+      appscanner.train()
+      #appscanner.test()
+      print(test_rate)
+      break

@@ -6,7 +6,7 @@ hyper_params = {'boosting_type': 'gbdt',
  'feature_fraction': 0.9,
  'bagging_fraction': 0.8,
  'bagging_freq': 5,
- 'verbose': 0,
+ 'verbose': -1,
  'num_class':100,
  'lambda_l1':0.05,
  'lambda_l2':0.15

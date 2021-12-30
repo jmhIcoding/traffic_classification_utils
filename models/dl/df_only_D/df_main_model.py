@@ -1,12 +1,11 @@
 __author__ = 'dk'
 from models.dl.attacks import DF_model, parser_raw_data
-from models.dl.df import df_model_config
+from models.dl.df_only_D import df_model_config
 from models.model_base import abs_model
 import os
 from config import raw_dataset_base
 from keras.utils import np_utils
 import numpy as np
-os.environ['CUDA_VISBALE_DEIVCES'] ='cuda:2'
 class model(abs_model):
     def __init__(self, dataset, randseed, splitrate):
         super(model,self).__init__('df',randseed= randseed)
@@ -32,6 +31,11 @@ class model(abs_model):
         os.makedirs(self.data, exist_ok=True)
         ##从原始数据集构建DF所需的数据集
         X_train,y_train, X_valid, y_valid, X_test, y_test = parser_raw_data(self, self.full_rdata, max_len = df_model_config.learning_params_template['in_dim'])
+
+        ##只使用包的方向
+        X_train = np.sign(X_train)
+        X_valid = np.sign(X_valid)
+        X_test = np.sign(X_test)
 
         self.save_data(X_train,y_train, X_valid, y_valid, X_test, y_test)
 
@@ -59,7 +63,7 @@ class model(abs_model):
 
         df_model.save_model(path=self.model)
         score = df_model.evaluate(X_test=X_test, y_test = y_test)
-        print('[Deep Fingerprinting Test on {0} accuracy {1}'.format(self.dataset, score))
+        print('[Deep Fingerprinting (only direction) Test on {0} accuracy {1}'.format(self.dataset, score))
     def test(self):
         X_train,y_train, X_valid, y_valid, X_test, y_test = self.load_data()
         y_test = np_utils.to_categorical(y_test, num_classes= self.num_classes())
@@ -68,7 +72,7 @@ class model(abs_model):
         df_model = DF_model(num_class= self.num_classes())
         df_model.load_model(self.model)
         score = df_model.evaluate(X_test=X_test,y_test=y_test)
-        print('Deep Fingerprinting Test on {0} accuracy :{1}'.format(self.dataset,score))
+        print('Deep Fingerprinting (only direction) Test on {0} accuracy :{1}'.format(self.dataset,score))
 
     def predict(self,pkt_size):
         def pad_sequence(x, max_len, pad_value=0):
@@ -111,7 +115,7 @@ class model(abs_model):
 if __name__ == '__main__':
   for test_rate in [0.1]:
     print(test_rate)
-    dataset='dapp60'
+    dataset='app60'
     df_model = model(dataset, randseed= 128, splitrate=test_rate)
     df_model.parser_raw_data()
     df_model.train()
@@ -121,4 +125,3 @@ if __name__ == '__main__':
     #import os
     #os.remove(df_model.model)
     #df_model.get_feature()
-    break

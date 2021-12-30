@@ -51,9 +51,11 @@ class model(abs_model):
 
                 for each in rdata :
                     if 'packet_length' not in each:
+                        
                         raise  ValueError('For each flow, must contain packet length field.')
                     if 'arrive_time_delta' not in each:
-                        raise ValueError('For each flow, must contain arrive_time_delta field')
+                        each['arrive_time_delta'] = [0.0] * len(each['packet_length'])
+			#raise ValueError('For each flow, must contain arrive_time_delta field')
 
                     pkt_size= each['packet_length']
                     timestamp = each['arrive_time_delta']
@@ -235,7 +237,7 @@ class model(abs_model):
         print("[RDP] Test on {0}, accuracy is {1}. ".format(self.dataset,accuracy))
         print(report)
 if __name__ == '__main__':
-    rdp = model('fgnet53', 128, 0.1)
+    rdp = model('awf200_burst', 128, 0.1)
     #rdp.parser_raw_data()
     rdp.train(num_boost_round=100)
     rdp.test()
