@@ -245,7 +245,7 @@ class SDAE_model(attack_base):
                     self.model = sdae_model.pre_train(self.model,x_train=x_train,x_test=x_test)
 
 
-def burstification_operator(x):
+def burstification_direction_operator(x):
     rst = [x[0]]
     for i in range(1, len(x)):
         if int(x[i]) == 0:
@@ -254,10 +254,18 @@ def burstification_operator(x):
             rst[-1]+= x[i]
         else:
             rst.append(x[i])
-
     return  rst
-
-def parser_raw_data(self,path, max_len, burstification = False):
+def burstification_time_operator(x, pkt_time, threshold=1e-5):
+    rst = [x[0]]
+    for i in range(1,len(x)):
+        if int(x[i])== 0 :
+            break
+        if abs(pkt_time[i]) < threshold and np.sign(rst[-1]) == np.sign(x[i]):
+            rst[-1] += x[i]
+        else:
+            rst.append(x[i])
+    return rst
+def parser_raw_data(self,path, max_len, burstification = False, burst_direction= True):
     def pad_sequence(x, max_len=max_len, pad_value=0):
         r =  x + [pad_value] * (max_len - len(x))
         return r[:max_len]
@@ -280,8 +288,14 @@ def parser_raw_data(self,path, max_len, burstification = False):
                 pkt_size= each['packet_length']
                 if len(pkt_size) < min_flow_len :
                     continue
-                if burstification :
-                    pkt_size = burstification_operator(pkt_size)
+
+                if burstification == True:
+                    pkt_time= each['arrive_time_delta']
+                    if burst_direction == True:
+                        pkt_size = burstification_direction_operator(pkt_size)
+                    else:
+                        pkt_size = burstification_time_operator(pkt_size, pkt_time=pkt_time)
+
                 x = pad_sequence(pkt_size)
                 X.append(x)
                 y.append(label)
