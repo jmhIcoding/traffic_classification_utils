@@ -19,6 +19,10 @@ Sirinam, P., Imani, M., Juarez, M., & Wright, M. (2018, October). Deep fingerpri
 Rimmer, V., Preuveneers, D., Juarez, M., Van Goethem, T., & Joosen, W. Automated Website Fingerprinting through Deep Learning.
 - Beauty
 Schuster, R., Shmatikov, V., & Tromer, E. (2017). Beauty and the burst: Remote identification of encrypted video streams. In 26th USENIX Security Symposium (USENIX Security 17) (pp. 1357-1374).
+- AppNet
+Wang, X., Chen, S., & Su, J. (2020, July). App-net: A hybrid neural network for encrypted mobile traffic classification. In IEEE INFOCOM 2020-IEEE Conference on Computer Communications Workshops (INFOCOM WKSHPS) (pp. 424-429). IEEE.
+- MIMETIC
+Aceto, G., Ciuonzo, D., Montieri, A., & Pescapè, A. (2019). MIMETIC: Mobile encrypted traffic classification using multimodal deep learning. Computer networks, 165, 106944.
 
 **一般经验来看，FS-Net在各个任务都是表现最好的。**
 
@@ -33,7 +37,7 @@ Al-Naami, K., Chandra, S., Mustafa, A., Khan, L., Lin, Z., Hamlen, K., & Thurais
 - RDP
 Jiang, M., Gou, G., Shi, J., & Xiong, G. (2019, October). I know what you are doing with remote desktop. In 2019 IEEE 38th International Performance Computing and Communications Conference (IPCCC) (pp. 1-7). IEEE.
 
-**一般来说，不同任务下，CUMUL效果最好！**
+**一般来说，不同任务下，CUMUL和BIND效果最好！**
 
 # 使用说明
 为了最大限度减少我们使用现有方法的工作量，对于一个新的加密流量分析任务，我们需要做两件事情：
@@ -80,7 +84,7 @@ dataset目录下，每个子目录都是一个任务的数据集，各个任务�
 ```
 主要的注意的有两点：
 1. json是一个大的list，list里面每个元素对应了一条网络流。如果list里面有n个元素，那么就表示这个类别下有n条流量样本。
-2. 每条流量都是一个dict, 里面有一个关键的字段：**packet_length**，包长序列。如果还需要使用BIND模型的话，**arrive_time_delta**字段也必不可少。其中包长序列是带正负号的，正负号表示数据包的方向。正号表示这个包是Client发给Server的，负号表示Sever发给Client的。之所以保留正负号是因为有的模型是需要这个信息的。
+2. 每条流量都是一个dict, 里面有一个关键的字段：**packet_length**，包长序列。如果还需要使用BIND模型的话，**arrive_time_delta**字段也必不可少。其中包长序列是带正负号的，正负号表示数据包的方向。正号表示这个包是Client发给Server的，负号表示Sever发给Client的。之所以保留正负号是因为有的模型是需要这个信息的。对于AppNet模型和MIMETIC模型来说，还需要添加payload载荷信息。
 
 例子：下面的json包含了两个样本。
 ```bash
