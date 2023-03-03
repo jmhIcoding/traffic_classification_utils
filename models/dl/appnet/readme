@@ -1,0 +1,6 @@
+包长序列：embedding, 使用Bi-LSTM做特征提取
+    包长序列最长截断为20，embedding 长度为128
+
+TLS第一个握手包的字节载荷：embedding, 使用CNN做特征提取
+    第一个握手包字节截断为1014， embedding长度为256
+
