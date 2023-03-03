@@ -26,6 +26,7 @@ class builder:
                     }
             for _root,_dirs,_files in os.walk(raw_feature_dictory):
                 for file in _files:
+                    print(file)
                     if not file.split('.')[-1]=='bind':
                         continue
                     packageName = file.split('.bind')[0]
@@ -165,6 +166,7 @@ class builder:
                                 Pkt_size[self.global_feature_dict['Pkt-size'][key]] += trace['Pkt-size'][key]
                         #合并
                         X=np.concatenate([Dn_Up_size,Dn_Up_time,Up_Dn_size,Up_Dn_time,Uni_size,Uni_time,Pkt_size])
+                        #print(self.global_feature_dict['Label'])
                         y=self.global_feature_dict['Label'][packageName]
                         self.X.append(X)
                         self.y.append(y)
@@ -182,10 +184,10 @@ class builder:
         test_split_index= int(self.y.shape[0] * test_split_ratio)
         X_test = self.X[:test_split_index]
         y_test = self.y[:test_split_index]
-        X_train = self.X[test_split_index:-test_split_index]
-        y_train=self.y[test_split_index:-test_split_index]
-        X_valid=self.X[-test_split_index:]
-        y_valid=self.y[-test_split_index:]
+        X_train = self.X[test_split_index:]
+        y_train=self.y[test_split_index:]
+        X_valid=self.X[:test_split_index]
+        y_valid=self.y[:test_split_index]
         return X_train,y_train,X_test,y_test,X_valid,y_valid
 if __name__ == '__main__':
     bd = builder(raw_feature_dictory='./raw_feature/',global_feature_dict_filename="./raw_feature/global_feature_dict.vocb")

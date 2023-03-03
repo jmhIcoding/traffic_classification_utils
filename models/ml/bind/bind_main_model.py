@@ -142,13 +142,15 @@ class model(abs_model):
         X_train,y_train ,X_valid,y_valid, X_test,y_test= dator.vectorize(test_split_ratio= self.splitrate, K= self.topK)
 
         hyper_params['num_class']= self.num_classes()
+        print(X_train.shape)
+        print(X_test.shape)
         ##开始训练
         lgb_train = lgb.Dataset(data=X_train,label=y_train)
         lgb_eval = lgb.Dataset(data=X_valid,label=y_valid)
         gbm = lgb.train(params=hyper_params,
                         train_set=lgb_train,
                         valid_sets=lgb_eval,
-                        num_boost_round=100,
+                        num_boost_round=50,
                         early_stopping_rounds=5)
         #save model
         try:
@@ -173,10 +175,14 @@ class model(abs_model):
         print('[Bind Test on {0}, accuracy: {1}]'.format(self.dataset,accuracy))
         report = classification_report(y_true=y_test,y_pred=label_predict,digits=5)
         print(report)
+        self.fpr_tpr_auc(y_pred=label_predict, y_real=y_test)
 
 if __name__ == '__main__':
-    for test_rate in [0.1]:
-        bind = model('awf200_burst', randseed= 128, splitrate= test_rate,topK=500)
+        import time
+    #for cnt in [500, 800, 1000, 1200, 1400, 1600]:
+        bind = model('cloudservice', randseed=int(time.time()), splitrate= 0.1,topK=1000)
         bind.parser_raw_data()
         bind.train()
         bind.test()
+        #print('train rate:',1- test_rate)
+        print('#Next#'*10)

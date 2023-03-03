@@ -2,7 +2,7 @@ __author__ = 'dk'
 hyper_params = {
          'boosting_type': 'gbdt',
          'objective': 'multiclass',
-         'num_leaves': 512,
+         'num_leaves': 32,
          'learning_rate': 0.05,
          'feature_fraction': 0.9,
          'bagging_fraction': 0.8,

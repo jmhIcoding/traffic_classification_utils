@@ -4,6 +4,7 @@ import os
 import pickle
 import numpy as np
 import gzip
+from sklearn.metrics import multilabel_confusion_matrix, roc_auc_score, auc
 class abs_model:
     def __init__(self, name, randseed):
         self.database = './data/'
@@ -62,3 +63,35 @@ class abs_model:
         for _root, _dir, _files in os.walk(self.full_rdata):
             classes = _files
         return len(classes)
+    def fpr_tpr_auc(self,  y_pred, y_real,y_pred_logit=None):
+        labels =set()
+        for each in y_real:
+            labels.add(each)
+        labels =list(labels)
+        mcm = multilabel_confusion_matrix(y_true=y_real,y_pred=y_pred,labels=labels)
+        #print(mcm)
+        fp ={}
+        tp ={}
+        fn ={}
+        tn ={}
+        for i in range(len(labels)):
+            fp.setdefault(labels[i],mcm[i,0,1])
+            tp.setdefault(labels[i],mcm[i,1,1])
+            fn.setdefault(labels[i],mcm[i,1,0])
+            tn.setdefault(labels[i],mcm[i,0,0])
+        acc={}
+        fpr={}
+        tpr={}
+        for each in fp:
+            acc.setdefault(each,(tp[each]+tn[each])/(fp[each]+tn[each]+fn[each]+tp[each]))
+            fpr.setdefault(each,fp[each]/(fp[each]+tn[each]))
+            tpr.setdefault(each,tp[each]/(tp[each]+fn[each]))
+
+        print('tpr:',tpr)
+
+        print('fpr:',fpr)
+        #auc = roc_auc_score(y_true=y_real, y_score=y_pred_logit[:,1])
+        #print('auc (prob):', auc)
+
+        auc = roc_auc_score(y_true=y_real, y_score=y_pred)
+        print('auc (label):', auc)

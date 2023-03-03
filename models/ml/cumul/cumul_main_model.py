@@ -174,11 +174,15 @@ class model(abs_model):
         print("[CUMUL] Test on {0}, accuracy is {1}. ".format(self.dataset,accuracy))
         print(report)
         print({'ppt':PPT, 'drop_rate': 1-_y_test.shape[0]/y_test.shape[0]})
+        self.fpr_tpr_auc(y_pred=label_predict, y_real=_y_test)
 if __name__ == '__main__':
     #cumul = model('D1_Twitter', 128, 0.1)
-    for test_rate in [0.995,0.99,0.95,0.5]:
-        cumul = model('app60', 128, test_rate)
-        cumul.parser_raw_data()
+        import time
+    #for cnt in [500, 800, 1000, 1200, 1400, 1600]:
+        cumul = model('app150', int(time.time()), 0.1)
+        #cumul.parser_raw_data()
         cumul.train(num_boost_round=50)
-        print(test_rate)
+        #print('train rate:', 1- test_rate)
         cumul.test()
+        #print(cnt)
+        print('#'*30)

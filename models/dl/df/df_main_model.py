@@ -111,11 +111,11 @@ class model(abs_model):
 if __name__ == '__main__':
   for test_rate in [0.1]:
     print(test_rate)
-    dataset='dapp60'
+    dataset='app150'
     df_model = model(dataset, randseed= 128, splitrate=test_rate)
-    df_model.parser_raw_data()
+    #df_model.parser_raw_data()
     df_model.train()
-    #df_model.test()
+    df_model.test()
     print(dataset)
     print(test_rate)
     #import os

@@ -27,6 +27,8 @@ class model(abs_model):
         self.full_rdata = full_rdata
         if self.data_exists() == False:
             self.parser_raw_data()
+        else:
+            self.load_data()
 
 
     def parser_raw_data(self):
@@ -132,11 +134,12 @@ class model(abs_model):
         y_valid = []
         X_test = []
         y_test = []
-
+        print(len(_X_train), len(_y_train))
+        print(_X_train[0])
         for i in range(len(_X_train)):
-            X_train += _X_train[i]
+            X_train.append( _X_train[i])
             y_train += [_y_train[i]] * len(_X_train[i])
-
+        print(len(X_train), len(X_train[0]),len(y_train))
         for i in range(len(_X_valid)):
             X_valid += _X_valid[i]
             y_valid += [_y_valid[i]] * len(_X_valid[i])
@@ -237,7 +240,7 @@ class model(abs_model):
         print("[RDP] Test on {0}, accuracy is {1}. ".format(self.dataset,accuracy))
         print(report)
 if __name__ == '__main__':
-    rdp = model('awf200_burst', 128, 0.1)
+    rdp = model('app53', 128, 0.1)
     #rdp.parser_raw_data()
     rdp.train(num_boost_round=100)
     rdp.test()

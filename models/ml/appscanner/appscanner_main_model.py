@@ -74,10 +74,12 @@ class model(abs_model):
         for i in range(len(X)):
             r = self.rand.uniform(0,1)
             if r < self.splitrate:
-                X_test.append(X[i])
-                y_test.append(y[i])
-                X_valid.append(X[i])
-                y_valid.append(y[i])				
+                if r / (self.splitrate + 1e-9)< 0.5:
+                    X_test.append(X[i])
+                    y_test.append(y[i])
+                else:
+                    X_valid.append(X[i])
+                    y_valid.append(y[i])				
             else:
                 X_train.append(X[i])
                 y_train.append(y[i])
@@ -130,7 +132,7 @@ class model(abs_model):
         hyper_params['num_class'] = self.num_classes()
         gbm = lgb.train(params=hyper_params,
                         train_set=lgb_train,
-                        valid_sets=lgb_train,
+                        valid_sets=lgb_eval,
                         num_boost_round=50,
                         early_stopping_rounds=5)
         #save model
@@ -170,11 +172,13 @@ class model(abs_model):
         print("[Appscanner] Test on {0}, accuracy is {1}. ".format(self.dataset,accuracy))
         print(report)
         print({'ppt':PPT, 'drop_rate': 1-_y_test.shape[0]/y_test.shape[0]})
+        self.fpr_tpr_auc(y_pred=label_predict, y_real=_y_test)
 if __name__ == '__main__':
-    for test_rate in [0.1]:
-      appscanner = model('awf200_burst', 128, test_rate)
+    #import time
+    #for ow_cnt in [500, 800, 1000, 1200, 1400, 1600]:
+      appscanner = model('app150' ,randseed=128,splitrate=0.1)
       #appscanner.parser_raw_data()
       appscanner.train()
-      #appscanner.test()
-      print(test_rate)
-      break
+      appscanner.test()
+      #print('train rate:', 1- test_rate)
+      #break

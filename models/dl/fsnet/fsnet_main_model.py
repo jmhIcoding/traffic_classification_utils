@@ -163,12 +163,12 @@ class model(abs_model):
             print(flow)
             raise exp
 if __name__ == '__main__':
- for test_rate in [ 0.1]:
+ for test_rate in [ 0.6]:
     print(test_rate)
-    dataset='app60'
+    dataset='twitter100'
     fsnet_model = model(dataset, randseed= 128, splitrate=test_rate, max_len=200)
     #fsnet_model.parser_raw_data()
-    #fsnet_model.train()
+    fsnet_model.train()
     fsnet_model.test()
     print(test_rate)
     print(dataset)
