@@ -215,4 +215,4 @@ if __name__ == '__main__':
 
 # 其他
 我的研究方向是加密网络流量分析，欢迎交流。
-我的邮件是：1024836002@qq.com，jiangminghao@iie.ac.cn，或QQ: 1024836002.
+我的邮件是：13237672625@163.com，jiangminghao@iie.ac.cn
