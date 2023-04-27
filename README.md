@@ -216,3 +216,12 @@ if __name__ == '__main__':
 # 其他
 我的研究方向是加密网络流量分析，欢迎交流。
 我的邮件地址是：13237672625@163.com，jiangminghao@iie.ac.cn
+
+# 常见问题
+1. 准备json数据的时候，包长序列是否需要填充？
+
+- 答： 不需要，各个方法里面内置了数据填充逻辑。
+
+2. 需要什么运行环境？
+
+- 答： 对于统计方法，sklearn, lightgbm，对于DF和FSNet 安装 tensorflow 1.15左右的版本，对于GraphDApp 安装pytorch和DGL 0.4.3
