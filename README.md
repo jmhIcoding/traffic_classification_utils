@@ -223,3 +223,17 @@ Then use the run.sh script to execute this `appscanner_main_model.py`, and run.s
 ```bash
 ./../../../run.sh appscanner_main_model.py
 ```
+
+# Citation
+Please cite as:
+```bash
+@book{traffic_classification_utils,
+	title = {jmhIcoding/traffic_classification_utils},
+	url = {https://github.com/jmhIcoding/traffic_classification_utils},
+	author = {Minghao Jiang},
+	date = {2023-09-05},
+	year = {2023},
+	month = {9},
+	day = {5},
+}
+```
